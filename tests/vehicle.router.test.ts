@@ -132,5 +132,81 @@ describe('Vehicle routes', () => {
 
     expect(response.status).toBe(400)
   })
+
+  it('retorna 400 ao editar veículo com payload inválido', async () => {
+    const response = await request(app)
+      .put('/vehicles/v1')
+      .send({})
+
+    expect(response.status).toBe(400)
+  })
+
+  it('edita veículo existente com sucesso', async () => {
+    mockedPrisma.vehicle.findUnique.mockResolvedValueOnce({
+      id: 'v1',
+      brand: 'Ford',
+      model: 'Fiesta',
+      year: 2020,
+      color: 'Preto',
+      price: 50000,
+      plate: 'ABC1234',
+      status: 'AVAILABLE'
+    })
+    mockedPrisma.vehicle.update.mockResolvedValueOnce({
+      id: 'v1',
+      brand: 'Ford',
+      model: 'Fiesta SE',
+      year: 2021,
+      color: 'Branco',
+      price: 52000,
+      plate: 'ABC1234',
+      status: 'AVAILABLE'
+    })
+
+    const response = await request(app)
+      .put('/vehicles/v1')
+      .send({
+        brand: 'Ford',
+        model: 'Fiesta SE',
+        year: 2021,
+        color: 'Branco',
+        price: 52000
+      })
+
+    expect(response.status).toBe(200)
+    expect(mockedPrisma.vehicle.update).toHaveBeenCalled()
+  })
+
+  it('retorna 200 ao buscar veículo existente por id', async () => {
+    mockedPrisma.vehicle.findUnique.mockResolvedValueOnce({
+      id: 'v1',
+      brand: 'Ford',
+      model: 'Fiesta',
+      year: 2020,
+      color: 'Preto',
+      price: 50000,
+      plate: 'ABC1234',
+      status: 'AVAILABLE'
+    })
+
+    const response = await request(app).get('/vehicles/v1')
+
+    expect(response.status).toBe(200)
+  })
+
+  it('lista veículos sem filtro de status', async () => {
+    mockedPrisma.vehicle.findMany.mockResolvedValueOnce([
+      { id: '1', price: 15000 },
+      { id: '2', price: 25000 }
+    ])
+
+    const response = await request(app).get('/vehicles')
+
+    expect(response.status).toBe(200)
+    expect(mockedPrisma.vehicle.findMany).toHaveBeenCalledWith({
+      where: {},
+      orderBy: { price: 'asc' }
+    })
+  })
 })
 

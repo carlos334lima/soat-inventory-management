@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.9% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>40/44</span>
+                <span class='fraction'>44/44</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.9% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>40/44</span>
+                <span class='fraction'>44/44</span>
             </div>
         
             
@@ -189,8 +189,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -201,30 +221,10 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -280,7 +280,7 @@ vehicleRouter.post('/', async (req, res) =&gt; {
 &nbsp;
 vehicleRouter.get('/', async (req, res) =&gt; {
   const status = req.query.status as string | undefined
-  const where = status ? { status } : <span class="branch-1 cbranch-no" title="branch not covered" >{}</span>
+  const where = status ? { status } : {}
   const vehicles = await prisma.vehicle.findMany({
     where,
     orderBy: { price: 'asc' }
@@ -290,8 +290,8 @@ vehicleRouter.get('/', async (req, res) =&gt; {
 &nbsp;
 vehicleRouter.put('/:id', async (req, res) =&gt; {
   const parseResult = vehicleSchema.partial({ plate: true }).safeParse(req.body)
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!parseResult.success) {
-<span class="cstat-no" title="statement not covered" >    return res.status(400).json({ errors: parseResult.error.flatten() })</span>
+  if (!parseResult.success) {
+    return res.status(400).json({ errors: parseResult.error.flatten() })
   }
   const { id } = req.params
   const existing = await prisma.vehicle.findUnique({ where: { id } })
@@ -301,11 +301,11 @@ vehicleRouter.put('/:id', async (req, res) =&gt; {
   if (existing.status === 'SOLD') {
     return res.status(409).json({ message: 'Veículo já vendido' })
   }
-  const vehicle = <span class="cstat-no" title="statement not covered" >await prisma.vehicle.update({</span>
+  const vehicle = await prisma.vehicle.update({
     where: { id },
     data: parseResult.data
   })
-<span class="cstat-no" title="statement not covered" >  return res.json(vehicle)</span>
+  return res.json(vehicle)
 })
 &nbsp;
 vehicleRouter.get('/:id', async (req, res) =&gt; {
@@ -314,7 +314,7 @@ vehicleRouter.get('/:id', async (req, res) =&gt; {
   if (!vehicle) {
     return res.status(404).json({ message: 'Veículo não encontrado' })
   }
-<span class="cstat-no" title="statement not covered" >  return res.json(vehicle)</span>
+  return res.json(vehicle)
 })
 &nbsp;
 vehicleRouter.patch('/:id/status', async (req, res) =&gt; {
@@ -340,7 +340,7 @@ vehicleRouter.patch('/:id/status', async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-08T12:55:05.719Z
+                at 2026-01-08T14:28:22.820Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
